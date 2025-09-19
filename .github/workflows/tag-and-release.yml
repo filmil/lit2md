@@ -94,6 +94,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           allowUpdates: true
-          artifacts: "bazel-bin/cmd/lib2md/lit2md-${{ matrix.os }}-${{ matrix.arch }}.zip"
+          artifacts: "bazel-bin/cmd/lit2md/lit2md-${{ matrix.os }}-${{ matrix.arch }}.zip"
           tag: ${{ steps.tag_version.outputs.previous_tag }}
 
