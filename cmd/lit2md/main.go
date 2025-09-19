@@ -17,50 +17,65 @@ import (
 // Cfg represents per-language configuration
 type Cfg struct {
 	commentStr string
+	mdLang     string
 }
 
 var langMap map[string]Cfg = map[string]Cfg{
 	"vhdl": Cfg{
 		commentStr: "--",
+		mdLang:     "vhdl",
 	},
 	"vhd": Cfg{
 		commentStr: "--",
+		mdLang:     "vhdl",
 	},
 	"c": Cfg{
 		commentStr: "//",
+		mdLang:     "c",
 	},
-	"cc": Cfg{
+	".cc": Cfg{
 		commentStr: "//",
+		mdLang:     "c++",
 	},
 	"cpp": Cfg{
 		commentStr: "//",
+		mdLang:     "c++",
 	},
 	"c++": Cfg{
 		commentStr: "//",
+		mdLang:     "c++",
 	},
 	"h": Cfg{
 		commentStr: "//",
+		mdLang:     "c",
 	},
 	"h++": Cfg{
 		commentStr: "//",
+		mdLang:     "c++",
 	},
 	"hpp": Cfg{
 		commentStr: "//",
+		mdLang:     "c++",
 	},
 	"go": Cfg{
 		commentStr: "//",
+		mdLang:     "go",
 	},
 	"sh": Cfg{
 		commentStr: "#",
+		mdLang:     "sh",
 	},
 	"bash": Cfg{
 		commentStr: "#",
+		mdLang:     "bash",
 	},
 	"py": Cfg{
 		commentStr: "#",
+		mdLang:     "py",
 	},
 	"txt": Cfg{
 		commentStr: "",
+		mdLang:     "",
 	},
 }
 
@@ -195,20 +210,20 @@ func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	ext := path.Ext(inputFilename)
 	cfg, ok := langMap[ext]
 	if !ok {
-		ext = "vhdl"
+		cfg = Cfg{}
 	}
 
 	if outputFilename == "" {
 		return fmt.Errorf("flag --output=... is mandatory")
 	}
 
-	out, err := os.Open(outputFilename)
+	out, err := os.Create(outputFilename)
 	if err != nil {
 		return fmt.Errorf("error while opening: %q: %v", outputFilename, err)
 	}
 	defer out.Close()
 
-	return convert(in, out, cfg.commentStr, ext)
+	return convert(in, out, cfg.commentStr, cfg.mdLang)
 }
 
 func main() {

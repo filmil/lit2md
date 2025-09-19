@@ -12,6 +12,35 @@ converted into markdown text, and code is converted into code blocks.
 
 [litp]: https://en.wikipedia.org/wiki/Literate_programming
 
+## Example
+
+For example, consider the simplistic `hello.cc`
+
+```
+//] # An example Hello World program.
+//]
+//] Don't forget headers!
+#include <iostream>
+
+//] And now, the rest of the code here:
+int main() {
+		std::cout << "Hello world" << std::endl;
+		exit(0);
+}
+```
+
+Running:
+
+```
+lit2md --input=hello.cc --output=hello.cc.md  # enclosed
+```
+
+produces [this output][this].
+
+[this]: ./hello.cc.md
+
+## Purpose
+
 LP can be done to various levels of sophistication. `lit2md` does the very
 basic massaging of source text.
 
