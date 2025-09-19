@@ -1,6 +1,5 @@
 # The unit tests for `lit2md`
-
-This is work in progress.
+Blurbs away.
 
 ```go
 // LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
@@ -12,16 +11,42 @@ import (
 	"testing"
 )
 
+```
+I prefer tabular tests
+
+```go
 func TestOne(t *testing.T) {
-	t.Parallel()
-	tests := []struct {
+
+```
+Marking the test as `Parallel` allows each individual test run to run
+separately. Not crucial but useful.
+
+```go
+t.Parallel()
+
+```
+I like to define tabular tests in terms of "inputs" and expected outputs.
+This is very common in go.
+
+```go
+tests := []struct {
 		summary  string
 		in       string
 		expected string
 	}{
-		{"empty", "", ""},
+```
+Always start with the most trivial tests, then build up to more
+complex ones.
+
+```go
+{"empty", "", ""},
 		{"basic", "Code", "```vhdl\nCode\n```\n"},
-		{
+```
+This shows the first significant tests that combines a code block
+and a text block.
+
+```go
+{
 			summary: "basic mixed",
 			in: strings.Join([]string{
 				"--] # Hello world",
@@ -37,7 +62,12 @@ func TestOne(t *testing.T) {
 				"```\n",
 			}, "\n"),
 		},
-		{
+```
+From here on, we deal with specific interesting corner cases. Some
+are more annoying to deal with than others.
+
+```go
+{
 			summary: "empty line before code",
 			in: strings.Join([]string{
 				"",
@@ -94,7 +124,13 @@ This is code again.
 		},
 	}
 
-	for _, test := range tests {
+```
+Once the test table is constructed, the test is basically formulaic,
+and mostly reduces to presenting the errors in a way that readily
+shows what the problem might be.
+
+```go
+for _, test := range tests {
 		test := test
 		t.Run(test.summary, func(t *testing.T) {
 			inRead := strings.NewReader(test.in)
