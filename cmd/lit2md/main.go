@@ -10,25 +10,86 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 	"strings"
 )
 
+// Cfg represents per-language configuration
+type Cfg struct {
+	commentStr string
+}
+
+var langMap map[string]Cfg = map[string]Cfg{
+	"vhdl": Cfg{
+		commentStr: "--",
+	},
+	"vhd": Cfg{
+		commentStr: "--",
+	},
+	"c": Cfg{
+		commentStr: "//",
+	},
+	"cc": Cfg{
+		commentStr: "//",
+	},
+	"cpp": Cfg{
+		commentStr: "//",
+	},
+	"c++": Cfg{
+		commentStr: "//",
+	},
+	"h": Cfg{
+		commentStr: "//",
+	},
+	"h++": Cfg{
+		commentStr: "//",
+	},
+	"hpp": Cfg{
+		commentStr: "//",
+	},
+	"go": Cfg{
+		commentStr: "//",
+	},
+	"sh": Cfg{
+		commentStr: "#",
+	},
+	"bash": Cfg{
+		commentStr: "#",
+	},
+	"py": Cfg{
+		commentStr: "#",
+	},
+	"txt": Cfg{
+		commentStr: "",
+	},
+}
+
+// prefixStr is the prefix string of a literate comment. If the language comment
+// prefix is `--`, and prefixStr is `]`, then the literate comment begins with
+// `--]`.
+var prefixStr string = "]"
+
+// State represents the text scanner state.
 type State int
 
 const (
+	// StateNone denotes neither Code or Text.
 	StateNone State = iota
+	// StateCode denotes we are scanning code.
 	StateCode
+	// StateText denotes we are scanning code.
 	StateText
 )
 
+// DocComment handles documentation comments recognition.
 type DocComment struct {
 	docPrefix, docPrefix2 string
 }
 
 func NewDocComment(commentStr string) DocComment {
 	// Used to delineate doc prefixes
-	docPrefix := fmt.Sprintf("%s]", commentStr)
-	docPrefix2 := fmt.Sprintf("%s] ", commentStr)
+	docPrefix := fmt.Sprintf("%s%s", commentStr, prefixStr)
+	docPrefix2 := fmt.Sprintf("%s%s ", commentStr, prefixStr)
 	return DocComment{
 		docPrefix:  docPrefix,
 		docPrefix2: docPrefix2,
@@ -37,7 +98,8 @@ func NewDocComment(commentStr string) DocComment {
 
 func (self *DocComment) IsPrefixOf(str string) bool {
 	strTrim := strings.TrimLeft(str, "\t ")
-	return strings.HasPrefix(strTrim, self.docPrefix) || strings.HasPrefix(strTrim, self.docPrefix2)
+	return strings.HasPrefix(strTrim, self.docPrefix) ||
+		strings.HasPrefix(strTrim, self.docPrefix2)
 }
 
 func (self *DocComment) UnapplyPrefix(str string) string {
@@ -119,7 +181,7 @@ func convert(in io.Reader, out io.Writer, commentStr, lang string) error {
 	return nil
 }
 
-func run(inputFilename, outputFilename string) error {
+func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	if inputFilename == "" {
 		return fmt.Errorf("flag --input= is mandatory")
 	}
@@ -129,6 +191,12 @@ func run(inputFilename, outputFilename string) error {
 		return fmt.Errorf("error while opening: %q: %v", inputFilename, err)
 	}
 	defer in.Close()
+
+	ext := path.Ext(inputFilename)
+	cfg, ok := langMap[ext]
+	if !ok {
+		ext = "vhdl"
+	}
 
 	if outputFilename == "" {
 		return fmt.Errorf("flag --output=... is mandatory")
@@ -140,7 +208,7 @@ func run(inputFilename, outputFilename string) error {
 	}
 	defer out.Close()
 
-	return convert(in, out, "--", "vhdl")
+	return convert(in, out, cfg.commentStr, ext)
 }
 
 func main() {
@@ -151,9 +219,10 @@ func main() {
 
 	flag.StringVar(&inputFilename, "input", "", "input filename (code)")
 	flag.StringVar(&outputFilename, "output", "", "output filename (markdown)")
+	flag.StringVar(&prefixStr, "prefix", "]", "The doc comment prefix string")
 	flag.Parse()
 
-	if err := run(inputFilename, outputFilename); err != nil {
+	if err := run(inputFilename, outputFilename, langMap); err != nil {
 		log.Printf("error: %v", err)
 		os.Exit(1)
 	}
