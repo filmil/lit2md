@@ -1,0 +1,26 @@
+# LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+
+load("@gazelle//:def.bzl", "gazelle")
+
+# bazel run //:gazelle
+# XXX: edit importpath
+# gazelle:prefix github.com/filmil/lit2md
+gazelle(name = "gazelle")
+
+load("@buildifier_prebuilt//:rules.bzl", "buildifier")
+
+# bazel run //:buildifier
+buildifier(
+    name = "buildifier",
+)
+
+# bazel run //:gazelle-update-repos
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)
