@@ -16,7 +16,7 @@ converted into markdown text, and code is converted into code blocks.
 
 For example, consider the simplistic `hello.cc`
 
-```
+```c++
 //] # An example Hello World program.
 //]
 //] Don't forget headers!
