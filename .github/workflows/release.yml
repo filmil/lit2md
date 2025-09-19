@@ -31,14 +31,14 @@ jobs:
       - name: "Test"
         run: "bazel test --test_output=errors //..."
       - name: "Build binaries for ${{ matrix.os }}_${{ matrix.arch }}"
-        run: "bazel build --platforms=@rules_go//go/toolchain:${{ matrix.os }}_${{ matrix.arch}} --//test:name_part_from_command_line=${{ matrix.os }}-${{ matrix.arch }} //test:zip"
+        run: "bazel build --platforms=@rules_go//go/toolchain:${{ matrix.os }}_${{ matrix.arch}} --//test:name_part_from_command_line=${{ matrix.os }}-${{ matrix.arch }} //cmd/lit2md:zip"
       - name: "Publish ${{ matrix.os }}_${{ matrix.arch }}"
         uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           allowUpdates: true
-          artifacts: "bazel-bin/test/test-${{ matrix.os }}-${{ matrix.arch }}.zip"
+          artifacts: "bazel-bin/cmd/lit2md/lit2md-${{ matrix.os }}-${{ matrix.arch }}.zip"
   source-archive:
     runs-on: ubuntu-latest
     steps:

@@ -5,23 +5,22 @@ load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
 go_library(
-    name = "test_lib",
+    name = "lit2md_lib",
     srcs = ["main.go"],
-    # XXX: edit importpath
     importpath = "github.com/filmil/lit2md/test",
     visibility = ["//visibility:private"],
 )
 
 go_binary(
-    name = "test",
-    embed = [":test_lib"],
+    name = "lit2md",
+    embed = [":lit2md_lib"],
     visibility = ["//visibility:public"],
 )
 
 go_test(
-    name = "test_test",
+    name = "lit2md_lib_test",
     srcs = ["main_test.go"],
-    embed = [":test_lib"],
+    embed = [":lit2md_lib"],
 )
 
 name_part_from_command_line(
@@ -32,9 +31,9 @@ name_part_from_command_line(
 pkg_zip(
     name = "zip",
     srcs = [
-        ":test",
+        ":lit2md",
     ],
-    package_dir = "test",
-    package_file_name = "test-{name_part}.zip",
+    package_dir = "lit2md",
+    package_file_name = "lit2md-{name_part}.zip",
     package_variables = ":name_part_from_command_line",
 )
