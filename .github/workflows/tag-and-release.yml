@@ -80,7 +80,7 @@ jobs:
       - name: "Test"
         run: "bazel test --test_output=errors //..."
       - name: "Build binaries for ${{ matrix.os }}_${{ matrix.arch }}"
-        run: "bazel build --platforms=@rules_go//go/toolchain:${{ matrix.os }}_${{ matrix.arch}} --//test:name_part_from_command_line=${{ matrix.os }}-${{ matrix.arch }} //cmd/lit2md:zip"
+        run: "bazel build --platforms=@rules_go//go/toolchain:${{ matrix.os }}_${{ matrix.arch}} --//cmd/lit2md:name_part_from_command_line=${{ matrix.os }}-${{ matrix.arch }} //cmd/lit2md:zip"
       - name: Find version tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
