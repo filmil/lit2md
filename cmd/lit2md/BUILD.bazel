@@ -1,14 +1,22 @@
 # LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
 
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("//build:my_package_name.bzl", "name_part_from_command_line")
 load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+load("//build:macros.bzl", "lit2md")
 
 go_library(
     name = "lit2md_lib",
     srcs = ["main.go"],
     importpath = "github.com/filmil/lit2md/test",
     visibility = ["//visibility:private"],
+)
+
+lit2md(
+    name = "main_go_lit2md",
+    src = "main.go",
+    out = "main.go.md",
 )
 
 go_binary(
@@ -23,6 +31,13 @@ go_test(
     embed = [":lit2md_lib"],
 )
 
+lit2md(
+    name = "main_test_go_lit2md",
+    src = "main_test.go",
+    out = "main_test.go.md",
+)
+
+
 name_part_from_command_line(
     name = "name_part_from_command_line",
     build_setting_default = "@set_me@",
@@ -36,4 +51,14 @@ pkg_zip(
     package_dir = "lit2md",
     package_file_name = "lit2md-{name_part}.zip",
     package_variables = ":name_part_from_command_line",
+)
+
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+
+write_source_files(
+    name = "update_md",
+    files = {
+        "main.go.md": "//cmd/lit2md:main_go_lit2md",
+        "main_test.go.md": "//cmd/lit2md:main_test_go_lit2md",
+    },
 )
