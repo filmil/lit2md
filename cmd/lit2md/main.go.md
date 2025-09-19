@@ -1,6 +1,6 @@
-```
-//] Let's first do away with the blurbs.
+Let's first do away with the blurbs.
 
+```go
 // LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
 
 // A conversion from simplified literate programs to markdown.
@@ -17,12 +17,14 @@ import (
 	"strings"
 )
 
-//] There is some rudimentary per-language configuration. The default "literate"
-//] comment string is `//]` for C-like languages, or `--]` for example in
-//] [VHDL][vhdl].  the `]` at the end was chosen to be easy to type.
-//]
-//] [vhdl]: https://en.wikipedia.org/wiki/VHDL
+```
+There is some rudimentary per-language configuration. The default "literate"
+comment string is `//]` for C-like languages, or `--]` for example in
+[VHDL][vhdl].  the `]` at the end was chosen to be easy to type.
 
+[vhdl]: https://en.wikipedia.org/wiki/VHDL
+
+```go
 // Cfg represents per-language configuration
 type Cfg struct {
 	// commentStr is the comment str for this language.
@@ -32,8 +34,10 @@ type Cfg struct {
 	mdLang string
 }
 
-//] Preload some language configurations.
+```
+Preload some language configurations.
 
+```go
 var langMap map[string]Cfg = map[string]Cfg{
 	"vhdl": Cfg{
 		commentStr: "--",
@@ -51,67 +55,71 @@ var langMap map[string]Cfg = map[string]Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"cpp": Cfg{
+	".cpp": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"c++": Cfg{
+	".c++": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"h": Cfg{
+	".h": Cfg{
 		commentStr: "//",
 		mdLang:     "c",
 	},
-	"h++": Cfg{
+	".h++": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"hpp": Cfg{
+	".hpp": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"go": Cfg{
+	".go": Cfg{
 		commentStr: "//",
 		mdLang:     "go",
 	},
-	"sh": Cfg{
+	".sh": Cfg{
 		commentStr: "#",
 		mdLang:     "sh",
 	},
-	"bash": Cfg{
+	".bash": Cfg{
 		commentStr: "#",
 		mdLang:     "bash",
 	},
-	"py": Cfg{
+	".py": Cfg{
 		commentStr: "#",
 		mdLang:     "py",
 	},
-	"txt": Cfg{
+	".txt": Cfg{
 		commentStr: "",
 		mdLang:     "",
 	},
 }
 
-//] We allow the user to choose the prefix, if somehow it conflicts with other
-//] uses. One potential us is to set this value to `!`, so that comments become
-//] the same as Doxygen comments. I am not sure how useful that is.  This
-//] is settable through flags, which are further down in the source.
+```
+We allow the user to choose the prefix, if somehow it conflicts with other
+uses. One potential us is to set this value to `!`, so that comments become
+the same as Doxygen comments. I am not sure how useful that is.  This
+is settable through flags, which are further down in the source.
 
+```go
 // prefixStr is the prefix string of a literate comment. If the language comment
 // prefix is `--`, and prefixStr is `]`, then the literate comment begins with
 // `--]`.
 var prefixStr string = "]"
 
-//] The source text parsing is *extremely* simplified compared to its
-//] [literate programming][lp] paragon. There are no code reorderings, there
-//] are no "tangle" and "weave", because they are extremely hard to use
-//] effectively in every day work, and they destroy editor cooperation. Oh well.
-//]
-//] We parse the text by simply alternating between "code" blocks and "text"
-//] blocks, and filling in the appropriate code block fences as we go. This is
-//] fully streaming, so you can do this to your heart's content.
+```
+The source text parsing is *extremely* simplified compared to its
+[literate programming][lp] paragon. There are no code reorderings, there
+are no "tangle" and "weave", because they are extremely hard to use
+effectively in every day work, and they destroy editor cooperation. Oh well.
 
+We parse the text by simply alternating between "code" blocks and "text"
+blocks, and filling in the appropriate code block fences as we go. This is
+fully streaming, so you can do this to your heart's content.
+
+```go
 // State represents the text scanner state.
 type State int
 
@@ -124,11 +132,13 @@ const (
 	StateText
 )
 
-//] We introduce a struct `DocComment` which takes on recognizing the literate
-//] comment prefix.  The rules are very simple: a line is a part of a literate
-//] comment if the first nonempty chars in the line is the literate comment
-//] prefix.
+```
+We introduce a struct `DocComment` which takes on recognizing the literate
+comment prefix.  The rules are very simple: a line is a part of a literate
+comment if the first nonempty chars in the line is the literate comment
+prefix.
 
+```go
 // DocComment handles documentation comments recognition.
 type DocComment struct {
 	docPrefix, docPrefix2 string
@@ -167,37 +177,47 @@ func (self *DocComment) UnapplyPrefix(str string) string {
 	return strings.TrimRight(strTrim, "\n\r")
 }
 
-//] `convert` makes a straight-line input-to-output conversion of the input
-//] text file, on a line-buffered basis.
+```
+`convert` makes a straight-line input-to-output conversion of the input
+text file, on a line-buffered basis.
 
+```go
 func convert(in io.Reader, out io.Writer, commentStr, lang string) error {
-	//] This is some regular initialization. We start from `StateNone`, which
-	//] allows us to eat initial empty lines.
+```
+This is some regular initialization. We start from `StateNone`, which
+allows us to eat initial empty lines.
 
-	d := NewDocComment(commentStr)
+```go
+d := NewDocComment(commentStr)
 	state := StateNone
 	scanner := bufio.NewScanner(in)
 	scanner.Split(bufio.ScanLines)
 
 	_ = out
 
-	//] This is done for each input line of text.  We unapply the prefix for
-	//] each line, it's cheap to do, even if unapplied lines
+```
+This is done for each input line of text.  We unapply the prefix for
+each line, it's cheap to do, even if unapplied lines
 
-	for scanner.Scan() {
+```go
+for scanner.Scan() {
 		t := scanner.Text()
 		np := d.UnapplyPrefix(t)
 
-		//] I heard that goto is considered harmful.
+```
+I heard that goto is considered harmful.
 
-	l:
+```go
+l:
 
 		switch state {
 
-		//] This is the beginning of the file. I added a `goto` just because
-		//] I can.
+```
+This is the beginning of the file. I added a `goto` just because
+I can.
 
-		case StateNone:
+```go
+case StateNone:
 			trimmed := strings.Trim(t, "\n\t ")
 			if trimmed != "" {
 				// It's something, check what.
@@ -211,9 +231,12 @@ func convert(in io.Reader, out io.Writer, commentStr, lang string) error {
 			}
 			// Otherwise, it's empty string, so read next line.
 
-		//] This is how code state is processed.  If the code ends, we also emit
-		//] the Markdown end of code block.
-		case StateCode:
+```
+This is how code state is processed.  If the code ends, we also emit
+the Markdown end of code block.
+
+```go
+case StateCode:
 			if d.IsPrefixOf(t) {
 				// Incoming text line!
 				fmt.Fprintf(out, "```\n") // End code
@@ -226,9 +249,11 @@ func convert(in io.Reader, out io.Writer, commentStr, lang string) error {
 				fmt.Fprintf(out, "%v\n", t)
 			}
 
-		//] This is how text is processed. The idea is very similar to above.
+```
+This is how text is processed. The idea is very similar to above.
 
-		case StateText:
+```go
+case StateText:
 			if d.IsPrefixOf(t) {
 				// Still text.
 				fmt.Fprintf(out, "%v\n", np)
@@ -246,23 +271,27 @@ func convert(in io.Reader, out io.Writer, commentStr, lang string) error {
 		}
 	}
 
-	//] Don't forget to close your open code blocks at the very end.
+```
+Don't forget to close your open code blocks at the very end.
 
-	// If we end in the "code" state, close the code block.
+```go
+// If we end in the "code" state, close the code block.
 	if state == StateCode {
 		fmt.Fprintf(out, "```\n")
 	}
 	return nil
 }
 
-//] run converts `inputFilename` to `outputFilename`. We use per-language map
-//] `langMap`, where the language is determined by file extension. This is
-//] simplistic, but enough for now.
-//]
-//] `run` only exists to convert the filenames to a reader and a writer, and
-//] to emit any initialization errors. This allows us to `convert` and `run`
-//] in unit tests easily.
+```
+run converts `inputFilename` to `outputFilename`. We use per-language map
+`langMap`, where the language is determined by file extension. This is
+simplistic, but enough for now.
 
+`run` only exists to convert the filenames to a reader and a writer, and
+to emit any initialization errors. This allows us to `convert` and `run`
+in unit tests easily.
+
+```go
 func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	if inputFilename == "" {
 		return fmt.Errorf("flag --input= is mandatory")
@@ -279,6 +308,7 @@ func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	if !ok {
 		cfg = Cfg{}
 	}
+	fmt.Println("ext: %v, cfg: %v", ext, cfg)
 
 	if outputFilename == "" {
 		return fmt.Errorf("flag --output=... is mandatory")
@@ -293,15 +323,17 @@ func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	return convert(in, out, cfg.commentStr, cfg.mdLang)
 }
 
-//] `main` declares the command line flags, and almost immediately offloads
-//] to `convert`.
-//]
-//] Use:
-//] ```
-//] lit2md --help
-//] ```
-//] to print usage, as you'd expect.
+```
+`main` declares the command line flags, and almost immediately offloads
+to `convert`.
 
+Use:
+```
+lit2md --help
+```
+to print usage, as you'd expect.
+
+```go
 func main() {
 
 	var (
