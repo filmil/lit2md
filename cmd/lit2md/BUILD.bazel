@@ -4,7 +4,7 @@ load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("//build:my_package_name.bzl", "name_part_from_command_line")
 load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
-load("//build:macros.bzl", "lit2md")
+load("//build:macros.bzl", "lit2md2")
 
 go_library(
     name = "lit2md_lib",
@@ -13,7 +13,7 @@ go_library(
     visibility = ["//visibility:private"],
 )
 
-lit2md(
+lit2md2(
     name = "main_go_lit2md",
     src = "main.go",
     out = "main.go.md",
@@ -31,7 +31,7 @@ go_test(
     embed = [":lit2md_lib"],
 )
 
-lit2md(
+lit2md2(
     name = "main_test_go_lit2md",
     src = "main_test.go",
     out = "main_test.go.md",
