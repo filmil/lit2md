@@ -49,8 +49,8 @@ than shown here.
 Finally, the [program itself][pg1], and [its test][pg2], can be viewed in their
 literate programming forms.
 
-[pg1]: ./cmd/main.go.md
-[pg2]: ./cmd/main_test.go.md
+[pg1]: ./cmd/lit2md/main.go.md
+[pg2]: ./cmd/lit2md/main_test.go.md
 
 ## Purpose
 
