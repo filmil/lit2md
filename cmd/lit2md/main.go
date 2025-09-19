@@ -50,43 +50,43 @@ var langMap map[string]Cfg = map[string]Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"cpp": Cfg{
+	".cpp": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"c++": Cfg{
+	".c++": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"h": Cfg{
+	".h": Cfg{
 		commentStr: "//",
 		mdLang:     "c",
 	},
-	"h++": Cfg{
+	".h++": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"hpp": Cfg{
+	".hpp": Cfg{
 		commentStr: "//",
 		mdLang:     "c++",
 	},
-	"go": Cfg{
+	".go": Cfg{
 		commentStr: "//",
 		mdLang:     "go",
 	},
-	"sh": Cfg{
+	".sh": Cfg{
 		commentStr: "#",
 		mdLang:     "sh",
 	},
-	"bash": Cfg{
+	".bash": Cfg{
 		commentStr: "#",
 		mdLang:     "bash",
 	},
-	"py": Cfg{
+	".py": Cfg{
 		commentStr: "#",
 		mdLang:     "py",
 	},
-	"txt": Cfg{
+	".txt": Cfg{
 		commentStr: "",
 		mdLang:     "",
 	},
@@ -278,6 +278,7 @@ func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	if !ok {
 		cfg = Cfg{}
 	}
+	fmt.Println("ext: %v, cfg: %v", ext, cfg)
 
 	if outputFilename == "" {
 		return fmt.Errorf("flag --output=... is mandatory")
