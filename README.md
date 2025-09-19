@@ -37,7 +37,14 @@ lit2md --input=hello.cc --output=hello.cc.md  # enclosed
 
 produces [this output][this].
 
+
 [this]: ./hello.cc.md
+
+It could be argued that such a converter could be useful in preparing
+explanatory documents about existing code.  Now, a Markdown file is not
+extremely useful in itself, but in combination with other typesetting software
+could prove to be interesting for preparing documents with a fancier layout
+than shown here.
 
 ## Purpose
 
