@@ -1,3 +1,5 @@
+//] # `lit2md`: a self-referential [literate programming][lp] presentation.
+//]
 //] Let's first do away with the blurbs.
 
 // LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
@@ -106,6 +108,8 @@ var prefixStr string = "]"
 //] [literate programming][lp] paragon. There are no code reorderings, there
 //] are no "tangle" and "weave", because they are extremely hard to use
 //] effectively in every day work, and they destroy editor cooperation. Oh well.
+//]
+//] [lp]: https://en.wikipedia.org/Literate_Programming
 //]
 //] We parse the text by simply alternating between "code" blocks and "text"
 //] blocks, and filling in the appropriate code block fences as we go. This is
