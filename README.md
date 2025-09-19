@@ -46,6 +46,12 @@ extremely useful in itself, but in combination with other typesetting software
 could prove to be interesting for preparing documents with a fancier layout
 than shown here.
 
+Finally, the [program itself][pg1], and [its test][pg2], can be viewed in their
+literate programming forms.
+
+[pg1]: ./cmd/main.go.md
+[pg2]: ./cmd/main_test.go.md
+
 ## Purpose
 
 LP can be done to various levels of sophistication. `lit2md` does the very
