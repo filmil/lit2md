@@ -66,13 +66,34 @@ the following:
 write_source_files(
     name = "update_md",
 ```
-This table deserves some explanation
+This table deserves some explanation, since it seems woefully under-documented.
+It is a map of *file names in this package* that should be generated to
+*build rules that should generate the file contents*.
 
 ```python
 files = {
-        "hello.cc.md": "//:hello_lit2md",
-        "README.md": "//:build_lit2md",
-        "MODULE.bazel.md": "//:module_lit2md",
+```
+For example, this line says: generate the contents of the file `hello.cc.md`
+by running the target `//:hello_lit2md`.  Note that the file *name* that
+`//:hello_lit2md` generates **must** be different from `hello.cc.md`, else
+you will see build errors.  For details see bug:
+https://github.com/bazel-contrib/bazel-lib/issues/1177
+
+```python
+"hello.cc.md": "//:hello_lit2md",
+```
+The remaining lines are similar. In this case, we use build targets to
+auto-generate `README.md`, which is moderately cool.
+
+```python
+"README.md": "//:build_lit2md",
+```
+And we also generate docs for `MODULE.bazel`, which makes me wonder if
+I should add a way to generate a single Markdown file from multiple
+sources.
+
+```python
+"MODULE.bazel.md": "//:module_lit2md",
     },
 )
 
