@@ -1,0 +1,65 @@
+#] Example [`lit2md`][lit2md] usage.
+#]
+#] *A self-referential explanation*. This README.md file is auto-generated from
+#] [BUILD.bazel](./BUILD.bazel). It is an example `BUILD.bazel` file that shows
+#] you how to use `lit2md`.
+#]
+#] Before reading this you should check out the proper setup for
+#] [`MODULE.bazel`](./MODULE.bazel).
+#]
+#] [lit2md]: https://github.com/filmil/lit2md
+
+#] You must load the following two macros first, to bring in the documentation
+#] generating code.
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@lit2md//build:macros.bzl", "lit2md2")
+
+#] This macro declares that you want to process the file `hello.cc` into a
+#] markdown file `hello.cc.md` that lives in the current directory. On its own,
+#] it does not modify your source code repository. Rather it "just" generates
+#] the file contents of the Markdown file based on `hello.cc`.  To keep the
+#] markdown files in sync, you also need the `write_source_files` referenced
+#] below.
+lit2md2(
+    name = "hello_lit2md",
+    src = "hello.cc",
+    out = "hello.cc.md",
+)
+
+#] `lit2md` gives us an interesting opportunity to document it based on its own
+#] source code.  In this case, we use the `BUILD.bazel` and `MODULE.bazel` to
+#] generate their own documentation!
+lit2md2(
+    name = "build_lit2md",
+    src = "BUILD.bazel",
+    out = "README.md",
+)
+
+lit2md2(
+    name = "module_lit2md",
+    src = "MODULE.bazel",
+    out = "MODULE.bazel.md",
+)
+
+#] This rule uses the [source-repo-writing trick][aet] from Alex Eagle to do
+#] the following:
+#] 1. Auto-generate tests which will run the above targets and check whether the
+#]    checked-in version of the Markdown files correspond to the newly generated
+#]    contents of the Markdown files. If they do not, your `bazel test //...` run
+#]    will fail, and will display a helpful message explaining how to update your
+#]    source files.
+#] 2. Auto-generate a target which you can `bazel run ...` to update the contents
+#]    of the generated files. This ensurs that so long as you regularly run
+#]    `bazel test`, your generated files will always be in sync with the source.
+#]
+#] [aet]: https://dev.to/bazel/bazel-can-write-to-the-source-folder-b9b
+write_source_files(
+    name = "update_md",
+    #] This table deserves some explanation
+    files = {
+        "hello.cc.md": "//:hello_lit2md",
+        "README.md": "//:build_lit2md",
+        "MODULE.bazel.md": "//:module_lit2md",
+    },
+)
+

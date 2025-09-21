@@ -5,9 +5,9 @@ def lit2md(name, src, out):
         srcs = [src],
         outs = [out],
         tools = [
-            Label("//cmd/lit2md"),
+            Label("@lit2md//cmd/lit2md"),
         ],
-        cmd = """$(location //cmd/lit2md) \
+        cmd = """$(location @lit2md//cmd/lit2md) \
                 --input=$(location {src}) \
                 --output=$(location {out})""".format(src=src,out=out),
     )

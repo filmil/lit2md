@@ -37,7 +37,7 @@ lit2md --input=hello.cc --output=hello.cc.md  # enclosed
 produces [this output][this].
 
 
-[this]: ./hello.cc.md
+[this]: ./integration/hello.cc.md
 
 It could be argued that such a converter could be useful in preparing
 explanatory documents about existing code.  Now, a Markdown file is not
