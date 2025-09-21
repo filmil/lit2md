@@ -91,11 +91,15 @@ var langMap map[string]Cfg = map[string]Cfg{
 	},
 	".py": Cfg{
 		commentStr: "#",
-		mdLang:     "py",
+		mdLang:     "python",
 	},
 	".txt": Cfg{
 		commentStr: "",
 		mdLang:     "",
+	},
+	".bazel": Cfg{
+		commentStr: "#",
+		mdLang:     "python",
 	},
 }
 
