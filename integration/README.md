@@ -1,11 +1,11 @@
-Example [`lit2md`][lit2md] usage.
+# Example [`lit2md`][lit2md] usage.
 
-*A self-referential explanation*. This README.md file is auto-generated from
+*A self-referential explanation*. This `README.md` file is auto-generated from
 [BUILD.bazel](./BUILD.bazel). It is an example `BUILD.bazel` file that shows
 you how to use `lit2md`.
 
 Before reading this you should check out the proper setup for
-[`MODULE.bazel`](./MODULE.bazel).
+[`MODULE.bazel`](./MODULE.bazel.md).
 
 [lit2md]: https://github.com/filmil/lit2md
 You must load the following two macros first, to bring in the documentation
