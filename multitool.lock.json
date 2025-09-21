@@ -8,13 +8,6 @@
                 "sha256": "8b3e6de511dc7a939a54e9d0891118f4d0081eb1899b1fdbe83a94a1473d643e",
                 "os": "linux",
                 "cpu": "x86_64"
-            },
-            {
-                "kind": "archive",
-                "url": "https://github.com/filmil/lit2md/releases/download/v0.2.1/lit2md-linux-386.zip",
-                "sha256": "8b3e6de511dc7a939a54e9d0891118f4d0081eb1899b1fdbe83a94a1473d643e",
-                "os": "linux",
-                "cpu": "386"
             }
         ]
     }
