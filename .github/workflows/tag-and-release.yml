@@ -1,3 +1,5 @@
+# Tags a new release with a new version, and automatically publishes its
+# sources and binaries into the release tag.
 name: Tag and Release
 
 on:

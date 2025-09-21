@@ -31,4 +31,6 @@ jobs:
         run: "bazel build //..."
       - name: Test
         run: "bazel test //..."
+      - name: Test integration
+        run: "cd integration && bazel test //..."
 
