@@ -10,6 +10,8 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.tag_version.outputs.new_tag }}
     steps:
       - name: Setup bazel
         uses: abhinavsingh/setup-bazel@v3
@@ -93,4 +95,13 @@ jobs:
           allowUpdates: true
           artifacts: "bazel-bin/cmd/lit2md/lit2md-${{ matrix.os }}-${{ matrix.arch }}.zip"
           tag: ${{ steps.tag_version.outputs.previous_tag }}
+
+  # This workflow waits for binary artifacts to be published.
+  publish:
+    needs: tag
+    uses: ./.github/workflows/publish.yml
+    with:
+      tag_name: ${{ needs.tag.outputs.tag_name }}
+    secrets:
+      BCR_PUBLISH_TOKEN: ${{ secrets.BCR_PUBLISH_TOKEN }}
 
