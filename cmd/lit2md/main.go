@@ -286,8 +286,6 @@ func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	if !ok {
 		cfg = Cfg{}
 	}
-	fmt.Println("ext: %v, cfg: %v", ext, cfg)
-
 	if outputFilename == "" {
 		return fmt.Errorf("flag --output=... is mandatory")
 	}
