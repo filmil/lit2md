@@ -45,6 +45,10 @@ var langMap map[string]Cfg = map[string]Cfg{
 		commentStr: "--",
 		mdLang:     "vhdl",
 	},
+	".lua": Cfg{
+		commentStr: "--",
+		mdLang:     "vhdl",
+	},
 	"vhd": Cfg{
 		commentStr: "--",
 		mdLang:     "vhdl",
@@ -316,8 +320,6 @@ func run(inputFilename, outputFilename string, langMap map[string]Cfg) error {
 	if !ok {
 		cfg = Cfg{}
 	}
-	fmt.Println("ext: %v, cfg: %v", ext, cfg)
-
 	if outputFilename == "" {
 		return fmt.Errorf("flag --output=... is mandatory")
 	}

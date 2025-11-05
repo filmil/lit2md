@@ -40,6 +40,10 @@ var langMap map[string]Cfg = map[string]Cfg{
 		commentStr: "--",
 		mdLang:     "vhdl",
 	},
+	".lua": Cfg{
+		commentStr: "--",
+		mdLang:     "vhdl",
+	},
 	"vhd": Cfg{
 		commentStr: "--",
 		mdLang:     "vhdl",
