@@ -4,8 +4,8 @@
         "binaries": [
             {
                 "kind": "archive",
-                "url": "https://github.com/filmil/lit2md/releases/download/v0.2.7/lit2md-linux-amd64.zip",
-                "sha256": "4577cc5d953084e5be06003971bdc03adabaa56594273ad5ed1aa86b1daed1ca",
+                "url": "https://github.com/filmil/lit2md/releases/download/v1.0.0/lit2md-linux-amd64.zip",
+                "sha256": "81ad1cdc65057fb02756e085db49554b3320318eb0e3fe20dc8dccd8ebec79cf",
                 "os": "linux",
                 "cpu": "x86_64"
             }
