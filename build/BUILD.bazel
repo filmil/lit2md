@@ -1,3 +1,18 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 # LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
 
 # Required to have the files in this directory be part of a package.
+
+bzl_library(
+    name = "macros",
+    srcs = ["macros.bzl"],
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "my_package_name",
+    srcs = ["my_package_name.bzl"],
+    visibility = ["//visibility:public"],
+    deps = ["@rules_pkg//pkg:providers.bzl"],
+)
