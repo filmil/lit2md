@@ -41,7 +41,7 @@ Preload some language configurations.
 
 ```go
 var langMap map[string]Cfg = map[string]Cfg{
-	"vhdl": Cfg{
+	".vhdl": Cfg{
 		commentStr: "--",
 		mdLang:     "vhdl",
 	},
@@ -49,11 +49,11 @@ var langMap map[string]Cfg = map[string]Cfg{
 		commentStr: "--",
 		mdLang:     "vhdl",
 	},
-	"vhd": Cfg{
+	".vhd": Cfg{
 		commentStr: "--",
 		mdLang:     "vhdl",
 	},
-	"c": Cfg{
+	".c": Cfg{
 		commentStr: "//",
 		mdLang:     "c",
 	},
@@ -84,6 +84,22 @@ var langMap map[string]Cfg = map[string]Cfg{
 	".go": Cfg{
 		commentStr: "//",
 		mdLang:     "go",
+	},
+	".sv": Cfg{
+		commentStr: "//",
+		mdLang:     "systemverilog",
+	},
+	".svh": Cfg{
+		commentStr: "//",
+		mdLang:     "systemverilog",
+	},
+	".v": Cfg{
+		commentStr: "//",
+		mdLang:     "verilog",
+	},
+	".vh": Cfg{
+		commentStr: "//",
+		mdLang:     "verilog",
 	},
 	".sh": Cfg{
 		commentStr: "#",
