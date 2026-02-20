@@ -31,6 +31,7 @@ def _name_part_from_command_line_naming_impl(ctx):
 # Creating this build_setting defines a flag the user can set.
 #
 name_part_from_command_line = rule(
+    doc = "ook",
     implementation = _name_part_from_command_line_naming_impl,
     # Note that the default value comes from the rule instantiation.
     build_setting = config.string(flag = True),
