@@ -14,5 +14,10 @@ def lit2md(name, src, out):
 
 
 def lit2md2(name, src, out):
+    """MacroX
+
+    Args:
+      src: Sources.
+    """
     lit2md(name=name, src=src, out="x.{out}".format(out=out))
 

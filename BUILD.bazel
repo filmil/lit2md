@@ -1,7 +1,9 @@
 # LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
 load("@bazel_lib//:bzl_library.bzl", "bzl_library")
+load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
+load("@stardoc//stardoc:stardoc.bzl", "stardoc")
 
 gazelle(
     name = "gazelle",
@@ -19,3 +21,32 @@ gazelle_binary(
 buildifier(
     name = "buildifier",
 )
+
+bzl_library(
+    name = "doc",
+    srcs = ["doc.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//build:macros",
+        "//build:my_package_name",
+    ],
+)
+
+
+stardoc(
+    name = "md",
+    input = "doc.bzl",
+    out = "gen.doc.md",
+    deps = [
+        "//build:macros",
+        "//build:my_package_name",
+    ],
+)
+
+write_source_files(
+    name = "update",
+    files = {
+        "doc.md": "//:md",
+    },
+)
+
