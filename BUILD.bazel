@@ -19,13 +19,3 @@ gazelle_binary(
 buildifier(
     name = "buildifier",
 )
-
-bzl_library(
-    name = "repo",
-    srcs = ["repo.bzl"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//build:macros",
-        "//build:my_package_name",
-    ],
-)
