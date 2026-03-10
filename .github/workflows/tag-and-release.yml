@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: "Test"
-        run: "bazel test --test_output=errors //... //:repo.doc_extract"
+        run: "bazel test --test_output=errors //... //:doc.doc_extract"
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
