@@ -1,10 +1,12 @@
+```go
+// SPDX-License-Identifier: Apache-2.0
+
+```
 # `lit2md`: a self-referential [literate programming][lp] presentation.
 
 Let's first do away with the blurbs.
 
 ```go
-// LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
-
 // A conversion from simplified literate programs to markdown.
 package main
 
