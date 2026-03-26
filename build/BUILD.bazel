@@ -1,6 +1,6 @@
-load("@bazel_lib//:bzl_library.bzl", "bzl_library")
+# SPDX-License-Identifier: Apache-2.0
 
-# LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+load("@bazel_lib//:bzl_library.bzl", "bzl_library")
 
 # Required to have the files in this directory be part of a package.
 

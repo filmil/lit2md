@@ -48,7 +48,7 @@ header, appropriately enclosed in comments that are appropriate for the
 source file type in question:
 
 ```
-LICENSE sha256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+SPDX-License-Identifier: Apache-2.0
 ```
 
 # `//third_party` maintenance
