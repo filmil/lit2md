@@ -5,8 +5,8 @@ module(
 )
 
 
-bazel_dep(name = "rules_go", version = "0.60.0")
-bazel_dep(name = "gazelle", version = "0.51.0")
+bazel_dep(name = "rules_go", version = "0.61.1")
+bazel_dep(name = "gazelle", version = "0.51.3")
 bazel_dep(name = "buildifier_prebuilt", version = "8.5.1.2")
 bazel_dep(name = "rules_pkg", version = "1.2.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
@@ -14,7 +14,7 @@ bazel_dep(name = "bazel_lib", version = "3.3.1", dev_dependency = True)
 bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "1.9.0", dev_dependency = True)
 bazel_dep(name = "bazel_skylib", version = "1.9.0", dev_dependency = True)
 bazel_dep(name = "stardoc", version = "0.8.1", dev_dependency = True)
-bazel_dep(name = "protobuf", version = "35.0", dev_dependency = True)
+bazel_dep(name = "protobuf", version = "35.1", dev_dependency = True)
 
 
 # go
