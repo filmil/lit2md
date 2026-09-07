@@ -10,19 +10,21 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    # A repository whose default workflow permission is read-only fails the
+    # tag push with "Resource not accessible by integration", after the
+    # action has already printed the version it computed.
+    permissions:
+      contents: write
     outputs:
       tag_name: ${{ steps.tag_version.outputs.new_tag }}
     steps:
-      - name: Setup bazel
-        uses: bazel-contrib/setup-bazel@0.15.0
-        with:
-          bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
-          repository-cache: true
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: "Test"
-        run: "bazel test --test_output=errors //... //:doc.doc_extract"
+        uses: actions/checkout@v4
+        with:
+          # The tag action analyses the commits since the previous tag. With
+          # the default shallow checkout it finds none, reports "Analysis of 0
+          # commits complete: no release", and emits an empty new_tag.
+          fetch-depth: 0
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
@@ -35,50 +37,36 @@ jobs:
           # `false` makes the action emit an empty `new_tag` when no commit asks
           # for a release, and the guards below then skip the whole release.
           default_bump: false
-      - name: Create a GitHub release
-        if: ${{ steps.tag_version.outputs.new_tag != '' }}
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          generateReleaseNotes: true
-      - name: Get release tag
-        if: ${{ steps.tag_version.outputs.new_tag != '' }}
-        id: get_version
-        run: echo "VERSION=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
-      - name: Get repo name
-        if: ${{ steps.tag_version.outputs.new_tag != '' }}
-        id: get_repo_name
-        run: echo "REPO_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
 
-      - name: "Prepare source archive release artifact"
-        if: ${{ steps.tag_version.outputs.new_tag != '' }}
-        uses: thedoctor0/zip-release@0.7.5
-        with:
-          type: 'zip'
-          filename: "${{ env.REPO_NAME }}-${{ env.VERSION }}.zip"
-          exclusions: '*.git* /*node_modules/* .editorconfig /bazel-*'
-
-      - name: "Prepare docs archive release artifact"
-        if: ${{ steps.tag_version.outputs.new_tag != '' }}
-        run: |
-          find bazel-bin/ -name "*.doc_extract.binaryproto" -print0 \
-          | tar -czvf ${{ env.REPO_NAME }}-${{ env.VERSION }}.docs.tar.gz \
-            --null -T - --transform 's/^bazel-bin\///g'
-
-      - name: "Upload source archive"
-        if: ${{ steps.tag_version.outputs.new_tag != '' }}
-        uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          allowUpdates: true
-          artifacts: "${{ env.REPO_NAME }}-${{ env.VERSION }}.zip, ${{ env.REPO_NAME }}-${{ env.VERSION }}.docs.tar.gz"
-
-  # Builds the binaries. It runs only when the tag job made a new tag.
-  release:
+  # Runs the tests, builds the release archive through
+  # .github/workflows/release_prep.sh, attests it with
+  # actions/attest-build-provenance, and creates the GitHub release.
+  #
+  # This reusable workflow is not interchangeable with a local equivalent.
+  # The Bazel Central Registry verifies the source archive attestation with
+  # slsa-verifier against a hard-coded builder id, set in tools/slsa.py of
+  # bazelbuild/bazel-central-registry, and that id names release_ruleset.yaml.
+  source_release:
     needs: tag
     if: ${{ needs.tag.outputs.tag_name != '' }}
+    permissions:
+      contents: write      # upload release files
+      id-token: write      # attest provenance
+      attestations: write  # attest provenance
+    uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@v7.7.0
+    with:
+      tag_name: ${{ needs.tag.outputs.tag_name }}
+      release_files: |
+        lit2md-${{ needs.tag.outputs.tag_name }}.zip
+        lit2md-${{ needs.tag.outputs.tag_name }}.docs.tar.gz
+      prerelease: false
+      bazel_test_command: "bazel test --test_output=errors //... //:doc.doc_extract"
+
+  release:
+    needs: [tag, source_release]
+    if: ${{ needs.tag.outputs.tag_name != '' }}
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -104,13 +92,6 @@ jobs:
         run: "bazel test --test_output=errors //..."
       - name: "Build binaries for ${{ matrix.os }}_${{ matrix.arch }}"
         run: "bazel build --platforms=@rules_go//go/toolchain:${{ matrix.os }}_${{ matrix.arch}} --//cmd/lit2md:name_part_from_command_line=${{ matrix.os }}-${{ matrix.arch }} //cmd/lit2md:zip"
-      - name: Find version tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: main
-          dry_run: true
       - name: "Publish ${{ matrix.os }}_${{ matrix.arch }}"
         uses: ncipollo/release-action@v1
         env:
@@ -118,13 +99,13 @@ jobs:
         with:
           allowUpdates: true
           artifacts: "bazel-bin/cmd/lit2md/lit2md-${{ matrix.os }}-${{ matrix.arch }}.zip"
-          tag: ${{ steps.tag_version.outputs.previous_tag }}
+          tag: ${{ needs.tag.outputs.tag_name }}
 
 
   # This workflow waits for binary artifacts to be published. It runs only when
   # the tag job made a new tag.
   publish:
-    needs: tag
+    needs: [tag, source_release]
     if: ${{ needs.tag.outputs.tag_name != '' }}
     uses: ./.github/workflows/publish.yml
     with:
