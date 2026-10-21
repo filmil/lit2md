@@ -1,3 +1,3 @@
 module github.com/filmil/lit2md
 
-go 1.25.4
+go 1.26.10
